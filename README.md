@@ -9,7 +9,7 @@ This repository is intentionally small and secret-free. It gives AI agents a sta
 MyPlanner may give an agent a paste-ready prompt:
 
 ```text
-use /MyPlanner; if unavailable, install https://github.com/JayRemedy/myplanner-agent-skill
+install https://github.com/JayRemedy/myplanner-agent-skill directly (root SKILL.md; no web search; do not echo token)
 myplanner_token: plnr_...
 ```
 
@@ -43,7 +43,7 @@ Examples by runtime:
 Do not commit tokens. MyPlanner may give an agent a paste-ready prompt like:
 
 ```text
-use /MyPlanner; if unavailable, install https://github.com/JayRemedy/myplanner-agent-skill
+install https://github.com/JayRemedy/myplanner-agent-skill directly (root SKILL.md; no web search; do not echo token)
 myplanner_token: plnr_...
 ```
 
