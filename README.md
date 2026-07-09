@@ -35,11 +35,19 @@ install https://github.com/JayRemedy/myplanner-agent-skill
 myplanner_token: plnr_...
 ```
 
-Install this public repo without GitHub auth. Never treat `myplanner_token` as `GITHUB_TOKEN` or any GitHub credential.
+Install fast:
+
+- This repo is public; no GitHub token is needed.
+- The skill file is at repository root: `SKILL.md`.
+- Install into the agent/skills directory, not into the user's current project repo.
+- Do not inspect or modify the current project git state just to install this skill.
+- After install, continue the requested MyPlanner task immediately if the runtime can use the skill; do not stop at “restart” unless that is truly required.
+
+Never treat `myplanner_token` as `GITHUB_TOKEN` or any GitHub credential.
 
 After installing the skill, treat the value after `myplanner_token:` as the current-session API token. Use it as `MYPLANNER_API_TOKEN` and use `https://myplanner.dev` as `MYPLANNER_BASE_URL`. For older prompts, `token: plnr_...` means the same thing as `myplanner_token: plnr_...`. If a prompt explicitly includes `myplanner_base_url:`, use it, but MyPlanner's own prompt intentionally omits that line.
 
-Do not print, log, commit, or save the token in this repo. If your tool UI shows command previews, avoid pasting the raw token into shell commands; use a redacted secret/session environment or in-memory header where possible.
+Do not print, log, commit, or save the token in this repo. If your tool UI shows command previews, avoid pasting the raw token into shell commands; use a redacted secret/session environment or in-memory header where possible. Do not spend multiple attempts building a private stdin wrapper; if stdin is used for the token, do not also deliver the script body through stdin.
 
 ```bash
 export MYPLANNER_BASE_URL="https://myplanner.dev"

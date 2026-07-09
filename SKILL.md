@@ -29,11 +29,15 @@ install https://github.com/JayRemedy/myplanner-agent-skill
 myplanner_token: plnr_...
 ```
 
-Install the public GitHub repo as a skill/instruction source. The repo is public: do not use the pasted `myplanner_token` as `GITHUB_TOKEN`, GitHub auth, or a repository access token.
+Fast path for pasted prompts:
 
-After installing this skill, treat the value after `myplanner_token:` as the current-session MyPlanner API credential and use `https://myplanner.dev` as `MYPLANNER_BASE_URL`. For backward compatibility, if the pasted prompt uses old `token: plnr_...` format, interpret that value exactly the same as `myplanner_token:`. If a prompt explicitly includes `myplanner_base_url:`, use that value, but MyPlanner's own Agent access prompt intentionally omits it to keep the handoff low-friction.
+1. Install the public GitHub repo as a skill/instruction source. The repo is public and the skill file is at repository root: `SKILL.md`. Do not probe GitHub auth, do not use the pasted `myplanner_token` as `GITHUB_TOKEN`, and do not treat it as a repository access token.
+2. Do not inspect or modify the user's current project git state just to install this skill; installation belongs in the agent/skills directory, outside the active project repo.
+3. After installation, continue the user's MyPlanner request immediately in the same session if your runtime can use the installed instructions. Do not stop with “restart to pick up the skill” unless the runtime truly cannot load/use it yet.
+4. Treat `myplanner_token:` as the current-session MyPlanner API credential and use `https://myplanner.dev` as `MYPLANNER_BASE_URL`. For backward compatibility, old `token: plnr_...` means the same thing. If a prompt explicitly includes `myplanner_base_url:`, use that value, but MyPlanner's own Agent access prompt intentionally omits it.
+5. Verify quickly with `GET /me`; if the user asked for board access, call `GET /boards` next. Do not run extra repository layout checks after the skill is installed.
 
-Do not commit the token, save it in this skill repo, log it, expose it in final output, or paste it into a shell command line if your tool UI shows command previews. Prefer your runtime's secret/session environment facility. If a command preview would reveal the raw token, use an API client/header facility that redacts secrets or keep the token in memory. If unavoidable, warn the user that the token may be exposed and should be revoked afterward.
+Do not commit the token, save it in this skill repo, log it, expose it in final output, or paste it into a shell command line if your tool UI shows command previews. Prefer your runtime's secret/session environment facility. If a command preview would reveal the raw token, use an API client/header facility that redacts secrets or keep the token in memory. Do not spend multiple attempts building a “private stdin” wrapper; if your tool cannot pass the token privately, make the minimal verified call, avoid echoing it in the answer, and tell the user to revoke the short-lived/exposed token afterward. If you do use stdin for the token, do not also deliver the Python/script body through stdin; use `python -c` or a temp script so stdin remains available for the token.
 
 For shell calls where command previews are private/redacted, provide the credential through the command environment or an in-memory/session export, for example:
 
