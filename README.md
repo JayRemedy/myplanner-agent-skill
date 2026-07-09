@@ -9,19 +9,19 @@ This repository is intentionally small and secret-free. It gives AI agents a sta
 MyPlanner may give an agent a paste-ready prompt:
 
 ```text
-install https://github.com/JayRemedy/myplanner-agent-skill
+use https://github.com/JayRemedy/myplanner-agent-skill
 myplanner_token: plnr_...
 ```
 
 Fastest acceptable behavior:
 
-1. Read the public repo's root `SKILL.md` or this README.
+1. The prompt says `use`, not `install`, on purpose. Read the public repo's root `SKILL.md` or this README.
 2. Treat `myplanner_token:` as the current-session MyPlanner API token, not as a GitHub token.
 3. Use `https://myplanner.dev` as the default MyPlanner base URL.
 4. Immediately verify with `GET /me`.
 5. If the user asked for boards, call `GET /boards` in the same turn.
 
-Do not make persistent skill installation a blocking prerequisite. Persistent install is optional convenience, not the task. If the agent can read these instructions now, it should use them now and continue the requested MyPlanner work. Do not stop at “restart” unless the runtime truly cannot use instructions it has already read.
+Do not make persistent skill installation a blocking prerequisite. Persistent install is optional convenience, not the task. If the agent can read these instructions now, it should use them now and continue the requested MyPlanner work. Do not stop at “restart” unless the runtime truly cannot use instructions it has already read. Legacy prompts may say `install https://github.com/JayRemedy/myplanner-agent-skill`; treat that as `use` unless the user explicitly asks for a persistent install.
 
 Examples by runtime:
 
@@ -39,7 +39,7 @@ Examples by runtime:
 Do not commit tokens. MyPlanner may give an agent a paste-ready prompt like:
 
 ```text
-install https://github.com/JayRemedy/myplanner-agent-skill
+use https://github.com/JayRemedy/myplanner-agent-skill
 myplanner_token: plnr_...
 ```
 

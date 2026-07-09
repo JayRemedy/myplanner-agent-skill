@@ -22,16 +22,16 @@ The most important rule: inspect the live board structure first. MyPlanner board
 
 ## Setup
 
-MyPlanner may give you a paste-ready install/connect prompt like:
+MyPlanner may give you a paste-ready use/connect prompt like:
 
 ```text
-install https://github.com/JayRemedy/myplanner-agent-skill
+use https://github.com/JayRemedy/myplanner-agent-skill
 myplanner_token: plnr_...
 ```
 
 Fast path for pasted prompts:
 
-1. Read/load this `SKILL.md` and use it immediately. Do not make persistent installation a blocking prerequisite; persistent install is optional convenience, not the task.
+1. The prompt says `use`, not `install`, on purpose. Read/load this `SKILL.md` and use it immediately. Do not make persistent installation a blocking prerequisite; persistent install is optional convenience, not the task. Legacy prompts may say `install https://github.com/JayRemedy/myplanner-agent-skill`; treat that as `use` unless the user explicitly asks for a persistent install.
 2. The repo is public and `SKILL.md` is at repository root. Do not probe GitHub auth, do not use the pasted `myplanner_token` as `GITHUB_TOKEN`, and do not treat it as a repository access token.
 3. For Hermes, installing as a skill is fine. For Codex, Claude Code, Cursor, Windsurf, Gemini CLI, and similar agents, reading/fetching this Markdown and following it is enough to proceed. If the runtime has a fast skill/custom-instruction installer, it may use it after the immediate API verification.
 4. Do not inspect or modify the user's current project git state just to install this skill. If you need persistent installation, install outside the active project repo.
