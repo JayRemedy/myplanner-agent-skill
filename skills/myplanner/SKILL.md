@@ -4,7 +4,7 @@ description: Use when an agent needs to read, update, sync, or automate MyPlanne
 license: MIT
 compatibility: Requires HTTPS access to myplanner.dev and either Python 3, curl, or an authenticated HTTP request tool.
 metadata:
-  version: "1.3.0"
+  version: "1.4.0"
   author: "JayRemedy"
   aliases: "myplanner, Myplanner"
   preferred_slash_command: "/MyPlanner"
@@ -337,6 +337,19 @@ mp_api POST /boards/<board_id>/webhooks '{"url":"https://example.com/myplanner-h
 mp_api GET /boards/<board_id>/webhooks
 mp_api GET /webhooks/<webhook_id>/deliveries
 ```
+
+## Response Formatting
+
+Present MyPlanner records for quick scanning rather than dumping raw JSON.
+
+- Use a compact Markdown table by default when returning multiple records with two or more useful fields. This applies to boards, groups, columns, items, subtasks, agenda entries, webhooks, and sync comparisons.
+- Include stable numeric IDs in tables whenever they will help with a follow-up action. For a board list, default columns are `Board` and `ID`.
+- For tasks or agenda entries, choose only relevant columns such as `Item`, `ID`, `Group`, `Status`, and `Date`; do not reproduce every API field.
+- Preserve full values when accuracy matters. If a long description or update would make a table unreadable, put the compact record table first and show the full text below it.
+- Use bullets instead when the result has only one meaningful field, contains one or two simple records, or the response is primarily narrative.
+- After a write, give a brief confirmation and a one-row table when multiple fields were created or changed.
+- Do not output raw JSON unless the user requests it or it is needed for debugging.
+- Honor the user's requested format over these defaults.
 
 ## Safety Rules
 

@@ -93,6 +93,10 @@ curl -sS \
   "$MYPLANNER_BASE_URL/app/rest.php/boards"
 ```
 
+## Output format
+
+Agents should present multi-record MyPlanner data in compact Markdown tables when there are at least two useful fields. For example, board lists should use `Board` and `ID` columns. Tasks and agenda results should include only relevant columns such as item, ID, group, status, and date. Bullets remain appropriate for one-field/simple results, and the user's requested format always wins. Avoid raw JSON unless requested or debugging.
+
 ## Important agent rule
 
 MyPlanner boards are flexible. Before writing:
