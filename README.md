@@ -4,27 +4,32 @@ A public, copyable agent skill for operating MyPlanner through its REST API and 
 
 This repository is intentionally small and secret-free. It gives AI agents a stable procedure for discovering board structure, using numeric IDs safely, creating/updating items, handling real subtasks, and registering HMAC-signed webhooks.
 
-## Install in Hermes Agent
+## Install/use with any agent
 
-```bash
-hermes skills install https://raw.githubusercontent.com/JayRemedy/myplanner-agent-skill/main/SKILL.md --name myplanner
-```
-
-Then start a new session and load the skill:
-
-```bash
-hermes -s myplanner
-```
-
-Or in an active session:
+MyPlanner may give an agent a paste-ready prompt:
 
 ```text
-/skill myplanner
+install https://github.com/JayRemedy/myplanner-agent-skill
+myplanner_token: plnr_...
 ```
 
-## Use with other agents
+Agent-agnostic behavior:
 
-If your agent does not support Hermes skills directly, copy `SKILL.md` into the agent's custom instructions, memory, or project rules.
+1. Fetch this public repo or its root `SKILL.md`.
+2. Load/copy `SKILL.md` as the agent's operating instructions for MyPlanner.
+3. Treat `myplanner_token:` as the current-session MyPlanner API token, not as a GitHub token.
+4. Continue the requested MyPlanner task immediately if the runtime can use the loaded instructions.
+
+Examples by runtime:
+
+- Hermes Agent:
+  ```bash
+  hermes skills install https://raw.githubusercontent.com/JayRemedy/myplanner-agent-skill/main/SKILL.md --name myplanner
+  hermes -s myplanner
+  ```
+  Or in an active Hermes session: `/skill myplanner`
+- Codex, Claude Code, Cursor, Windsurf, Gemini CLI, and similar agents: clone/fetch this public repo and add `SKILL.md` to the agent's custom instructions, project rules, memory, or skill system. The file is intentionally plain Markdown so non-Hermes agents can use it directly.
+- If an agent has no skill system: read `SKILL.md`, follow the Setup and Discovery Workflow sections, then call the MyPlanner REST API directly.
 
 ## Runtime secrets
 
