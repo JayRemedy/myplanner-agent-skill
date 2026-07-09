@@ -22,15 +22,26 @@ The most important rule: inspect the live board structure first. MyPlanner board
 
 ## Setup
 
-1. Sign in to MyPlanner.
-2. Open `Integrate` > `API tokens`.
-3. Create a token for the agent.
-4. Give the agent these environment variables or equivalent secret storage:
+MyPlanner may give you a paste-ready install/connect prompt like:
+
+```text
+instal https://github.com/JayRemedy/myplanner-agent-skill
+token:
+plnr_...
+```
+
+After installing this skill, treat the line after `token:` as the current-session MyPlanner credential. Do not commit it, log it, save it in this skill repo, or expose it in final output. Use it as `MYPLANNER_API_TOKEN` for API calls in this session, and use `https://myplanner.dev` as `MYPLANNER_BASE_URL` unless the user gives a different base URL.
+
+For shell calls, provide the credential through the command environment or an in-memory/session export, for example:
 
 ```bash
 export MYPLANNER_BASE_URL="https://myplanner.dev"
-export MYPLANNER_API_TOKEN="..."
+export MYPLANNER_API_TOKEN="plnr_..."
 ```
+
+If your runtime has a secure secret store, save the token there instead. If you cannot set environment variables, still use the pasted token directly in the Bearer authorization header for the immediate API call; do not refuse just because the token is not already present in the process environment.
+
+If no token was pasted, ask the user to generate one in MyPlanner Settings > Agent access or Integrate > API tokens.
 
 Tokens authenticate with:
 
