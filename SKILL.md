@@ -31,7 +31,7 @@ myplanner_token: plnr_...
 
 Fast path for pasted prompts:
 
-1. Install the public GitHub repo as a skill/instruction source. The repo is public and the skill file is at repository root: `SKILL.md`. Do not probe GitHub auth, do not use the pasted `myplanner_token` as `GITHUB_TOKEN`, and do not treat it as a repository access token.
+1. Install/load the public GitHub repo as a skill/instruction source. The repo is public and the skill file is at repository root: `SKILL.md`. For Hermes, install it as a skill. For Codex, Claude Code, Cursor, Windsurf, Gemini CLI, and similar agents, load/copy `SKILL.md` into the agent's custom instructions, project rules, memory, or skill system. Do not probe GitHub auth, do not use the pasted `myplanner_token` as `GITHUB_TOKEN`, and do not treat it as a repository access token.
 2. Do not inspect or modify the user's current project git state just to install this skill; installation belongs in the agent/skills directory, outside the active project repo.
 3. After installation, continue the user's MyPlanner request immediately in the same session if your runtime can use the installed instructions. Do not stop with “restart to pick up the skill” unless the runtime truly cannot load/use it yet.
 4. Treat `myplanner_token:` as the current-session MyPlanner API credential and use `https://myplanner.dev` as `MYPLANNER_BASE_URL`. For backward compatibility, old `token: plnr_...` means the same thing. If a prompt explicitly includes `myplanner_base_url:`, use that value, but MyPlanner's own Agent access prompt intentionally omits it.
