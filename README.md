@@ -31,7 +31,7 @@ If your agent does not support Hermes skills directly, copy `SKILL.md` into the 
 Do not commit tokens. MyPlanner may give an agent a paste-ready prompt like:
 
 ```text
-instal https://github.com/JayRemedy/myplanner-agent-skill
+install https://github.com/JayRemedy/myplanner-agent-skill
 token:
 plnr_...
 ```

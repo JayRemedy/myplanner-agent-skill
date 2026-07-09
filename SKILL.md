@@ -25,7 +25,7 @@ The most important rule: inspect the live board structure first. MyPlanner board
 MyPlanner may give you a paste-ready install/connect prompt like:
 
 ```text
-instal https://github.com/JayRemedy/myplanner-agent-skill
+install https://github.com/JayRemedy/myplanner-agent-skill
 token:
 plnr_...
 ```
