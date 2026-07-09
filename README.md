@@ -32,11 +32,10 @@ Do not commit tokens. MyPlanner may give an agent a paste-ready prompt like:
 
 ```text
 install https://github.com/JayRemedy/myplanner-agent-skill
-token:
-plnr_...
+token: plnr_...
 ```
 
-After installing the skill, treat the line after `token:` as the current-session API token. Use it as `MYPLANNER_API_TOKEN` and use `https://myplanner.dev` as `MYPLANNER_BASE_URL` unless a different base URL was provided.
+After installing the skill, treat the value after `token:` as the current-session API token. Use it as `MYPLANNER_API_TOKEN` and use `https://myplanner.dev` as `MYPLANNER_BASE_URL` unless a different base URL was provided.
 
 ```bash
 export MYPLANNER_BASE_URL="https://myplanner.dev"
