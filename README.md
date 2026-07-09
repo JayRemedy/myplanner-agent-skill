@@ -1,6 +1,6 @@
 # MyPlanner Agent Skill
 
-A public, copyable agent skill for operating MyPlanner through its REST API and webhooks. Preferred display/command name: `MyPlanner` (`/MyPlanner`), with lowercase `myplanner` as an alias when runtimes support aliases.
+A public, copyable agent skill for operating MyPlanner through its REST API and webhooks. The standards-compliant skill identifier is lowercase `myplanner`; `agents/openai.yaml` supplies the user-facing display name `MyPlanner`.
 
 This repository is intentionally small and secret-free. It gives AI agents a stable procedure for discovering board structure, using numeric IDs safely, creating/updating items, handling real subtasks, understanding Agenda as date-column-driven board agenda, and registering HMAC-signed webhooks.
 
@@ -9,19 +9,19 @@ This repository is intentionally small and secret-free. It gives AI agents a sta
 MyPlanner may give an agent a paste-ready prompt:
 
 ```text
-install https://github.com/JayRemedy/myplanner-agent-skill
+use /MyPlanner; if unavailable, install https://github.com/JayRemedy/myplanner-agent-skill
 myplanner_token: plnr_...
 ```
 
-Expected behavior:
+Expected fast behavior:
 
-1. The prompt uses `install <github repo>` because that is the common convention for a persistent agent skill install.
-2. Install/register the skill using the current runtime's normal skill/custom-instruction installer when available. Use `MyPlanner` as the display/name so the preferred command is `/MyPlanner`; keep lowercase `myplanner` as an alias when supported.
-3. Verify the skill is visible in the normal skill/slash-command list before saying it is “installed.” If the runtime lowercases skill names, report the actual command it created.
-4. Treat `myplanner_token:` as the current-session MyPlanner API token, not as a GitHub token.
-5. Use `https://myplanner.dev` as the default MyPlanner base URL.
-6. Immediately verify with `GET /me`.
-7. If the user asked for boards, call `GET /boards` in the same turn.
+1. Check whether `/MyPlanner` is already installed. If yes, skip the installer, GitHub inspection, web search, and local file rewrites; immediately verify `GET /me`.
+2. Only if unavailable, install/register this public repo using the runtime's normal installer. The skill is the root `SKILL.md`; no GitHub auth, branch inspection, or subdirectory discovery is needed.
+3. Use `MyPlanner` as the display/name so the preferred command is `/MyPlanner`; keep lowercase `myplanner` as an alias when supported.
+4. Verify a fresh install is visible in the normal skill/slash-command list before saying it is installed.
+5. Treat `myplanner_token:` as the current-session MyPlanner API token, not as a GitHub token.
+6. Use `https://myplanner.dev` as the default base URL and immediately verify `GET /me`; call `GET /boards` in the same turn when boards are relevant.
+7. Under zsh, do not use `status` as a variable name. Use `http_code` or the bundled `scripts/myplanner_api.py` helper.
 
 If the runtime cannot persistently install the skill, fetch/read `SKILL.md` and continue anyway, but be precise: say “loaded for this session,” not “installed.” Session-loaded instructions may not appear in the skill/slash-command list. Do not stop at “restart” unless the runtime truly cannot use instructions it has already read.
 
@@ -43,18 +43,17 @@ Examples by runtime:
 Do not commit tokens. MyPlanner may give an agent a paste-ready prompt like:
 
 ```text
-install https://github.com/JayRemedy/myplanner-agent-skill
+use /MyPlanner; if unavailable, install https://github.com/JayRemedy/myplanner-agent-skill
 myplanner_token: plnr_...
 ```
 
-Install properly:
+Connect quickly:
 
-- This repo is public; no GitHub token is needed.
-- Install/register the GitHub repo using the runtime's normal skill/custom-instruction installer.
+- If `/MyPlanner` is already installed, do not reinstall or inspect GitHub; use it immediately.
+- Otherwise install/register this public repo with the runtime's normal skill installer. The skill is the root `SKILL.md`.
 - Do not treat `myplanner_token` as GitHub auth.
-- Verify list/slash-command visibility before claiming the skill is installed.
-- If persistent install is unavailable, read `SKILL.md` and continue, but call it loaded for this session.
-- Continue the requested MyPlanner task immediately if the runtime can use the instructions; do not stop at “restart” unless that is truly required.
+- Verify a fresh install is visible before claiming it is installed.
+- Continue immediately with `GET /me`, then the requested MyPlanner task.
 
 Never treat `myplanner_token` as `GITHUB_TOKEN` or any GitHub credential.
 
@@ -68,6 +67,15 @@ export MYPLANNER_API_TOKEN="plnr_..."
 ```
 
 If the agent cannot set environment variables, it should still use the pasted token directly in the Bearer authorization header for immediate API calls instead of refusing because `MYPLANNER_API_TOKEN` is not already set.
+
+For a deterministic call path that avoids shell-variable mistakes, use the dependency-free helper bundled with the skill:
+
+```bash
+python3 scripts/myplanner_api.py GET /me
+python3 scripts/myplanner_api.py GET /boards
+```
+
+It reads `MYPLANNER_API_TOKEN`; `--token-stdin` is available when the runtime can provide stdin securely. Under zsh, never name a variable `status`; use `http_code`.
 
 Tokens are created inside MyPlanner: Settings > Agent access or `Integrate` > `API tokens`.
 
