@@ -4,7 +4,7 @@ description: Use when an agent needs to read, update, sync, or automate MyPlanne
 license: MIT
 compatibility: Requires HTTPS access to myplanner.dev and either Python 3, curl, or an authenticated HTTP request tool.
 metadata:
-  version: "1.5.0"
+  version: "1.6.0"
   author: "JayRemedy"
   aliases: "myplanner, Myplanner"
   preferred_slash_command: "/MyPlanner"
@@ -224,6 +224,8 @@ PUT    /items/{id}/values/{column_id}  {value}
 
 Use `PUT /items/{id}/values/{column_id}` for a single column value. Use an empty string or `null` to clear a value.
 
+For `DELETE /items/{id}` and `DELETE /subtasks/{id}`, inspect the returned `calendar_sync` object when the board has Google Calendar connected. A mapped event deletion should contribute to `calendar_sync.stats.deleted`; zero is valid when the task had no mapped event. If `calendar_sync.ok` is false, report that MyPlanner deletion succeeded but Google Calendar propagation failed instead of claiming full success. Do not manually delete event-mapping rows: the server preserves them until the Google event is deleted or confirmed already absent.
+
 ### Subtasks
 
 ```text
@@ -408,7 +410,7 @@ Present MyPlanner records for quick scanning rather than dumping raw JSON.
 
 ## Verification Checklist
 
-- [ ] Token authenticated with `GET /me`.
+- [ ] Token authenticated through the first useful API request; `GET /me` was used only if identity information was needed.
 - [ ] Target board was discovered with `GET /boards` and `GET /boards/{id}`.
 - [ ] Numeric IDs were used for writes.
 - [ ] Destructive operations were explicitly confirmed.

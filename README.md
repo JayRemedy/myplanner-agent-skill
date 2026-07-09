@@ -110,6 +110,8 @@ Do not infer subtasks from names, indentation, or imported Monday.com shape. An 
 
 Focus is also structural: items in the `Focus` group must have Status `Focus`. Setting Status to `Focus` moves the item into that group; changing it to another status moves it out. Creating or moving an item into `Focus` sets Status to `Focus`. Agents should read back both group and status after related writes.
 
+Deleting a parent task or real subtask from a Google-connected board also deletes its mapped Google Calendar event. Agents should inspect `calendar_sync.stats.deleted` in the DELETE response and report a calendar-sync error if propagation failed.
+
 ## License
 
 MIT
