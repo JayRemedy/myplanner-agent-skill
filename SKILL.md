@@ -1,12 +1,14 @@
 ---
-name: myplanner
-description: Use when an agent needs to read, update, sync, or automate MyPlanner boards through the token-authenticated REST API and webhooks.
+name: MyPlanner
+description: Use when an agent needs to read, update, sync, or automate MyPlanner boards, agenda, tasks, subtasks, Monday imports, REST API access, and webhooks.
 version: 1.0.0
 author: JayRemedy
 license: MIT
 metadata:
+  aliases: [myplanner, Myplanner]
+  preferred_slash_command: /MyPlanner
   hermes:
-    tags: [myplanner, boards, tasks, rest-api, webhooks, planning]
+    tags: [MyPlanner, myplanner, boards, agenda, tasks, subtasks, rest-api, webhooks, planning]
     homepage: https://myplanner.dev
 ---
 
@@ -19,6 +21,22 @@ MyPlanner is a planning-board app with boards, groups, items, columns, updates, 
 Use this skill when you need to let an AI agent operate a MyPlanner workspace safely: list boards, inspect structure, create or update tasks, maintain column values, backfill missing text, sync imported Monday.com data, or register webhooks.
 
 The most important rule: inspect the live board structure first. MyPlanner boards are flexible. Column IDs, group IDs, and item IDs are numeric and board-specific, so do not guess them from names.
+
+## Known workspace concepts
+
+Boards are top-level MyPlanner workspaces. As of the latest verified `/boards` response, John's workspace contains these boards:
+
+| ID | Board |
+| --- | --- |
+| 4 | JunkDoctors |
+| 3 | Bunker |
+| 2 | Bapi |
+| 1 | Liabilities |
+| 7 | myplanner |
+
+Use these as helpful defaults for recognition and routing, but still call `GET /boards` before writes because board IDs/names can change.
+
+Agenda is not a separate board. In the app UI, Agenda means the calendar/day agenda derived from the currently opened board's Date columns. It lists items and subtasks whose date-column value matches the selected day/today, including group, date-column title when multiple Date columns exist, status, and subtask marker. To answer agenda questions through the REST API: fetch/verify the target board, identify `date` columns, fetch items and subtasks as needed, parse date values, then filter by the requested date. If the user just says “agenda” without a board, ask which board or use the currently implied board from context; do not invent a global `/agenda` endpoint.
 
 ## Setup
 
@@ -33,8 +51,8 @@ Install path for pasted prompts:
 
 1. The prompt uses `install <github repo>` because that is the common convention for a persistent agent skill install.
 2. The repo is public. Do not probe GitHub auth, do not use the pasted `myplanner_token` as `GITHUB_TOKEN`, and do not treat it as a repository access token.
-3. Install/register the skill using the current runtime's normal skill/custom-instruction installer when available.
-4. Verify the skill is visible in the normal skill/slash-command list before saying it is “installed.”
+3. Install/register the skill using the current runtime's normal skill/custom-instruction installer when available. Use the skill name/display name `MyPlanner` so the preferred command/list entry is `/MyPlanner`. Keep lowercase `myplanner` as an alias if the runtime supports aliases.
+4. Verify the skill is visible in the normal skill/slash-command list before saying it is “installed.” If the runtime lowercases skill names, report the actual command it created.
 5. If the runtime cannot persistently install the skill, fetch/read `SKILL.md` and continue anyway, but be precise: say “loaded for this session,” not “installed.” Session-loaded instructions may not appear in the skill/slash-command list.
 6. Treat `myplanner_token:` as the current-session MyPlanner API credential and use `https://myplanner.dev` as `MYPLANNER_BASE_URL`. For backward compatibility, old `token: plnr_...` means the same thing. If a prompt explicitly includes `myplanner_base_url:`, use that value, but MyPlanner's own Agent access prompt intentionally omits it.
 7. Verify immediately with `GET /me`; if the user asked for board access, call `GET /boards` in the same turn. Do not stop with “restart to pick up the skill” unless the runtime truly cannot use instructions it has already read.
