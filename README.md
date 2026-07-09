@@ -32,10 +32,15 @@ Do not commit tokens. MyPlanner may give an agent a paste-ready prompt like:
 
 ```text
 install https://github.com/JayRemedy/myplanner-agent-skill
-token: plnr_...
+myplanner_base_url: https://myplanner.dev
+myplanner_token: plnr_...
 ```
 
-After installing the skill, treat the value after `token:` as the current-session API token. Use it as `MYPLANNER_API_TOKEN` and use `https://myplanner.dev` as `MYPLANNER_BASE_URL` unless a different base URL was provided.
+Install this public repo without GitHub auth. Never treat `myplanner_token` as `GITHUB_TOKEN` or any GitHub credential.
+
+After installing the skill, treat the value after `myplanner_token:` as the current-session API token. Use it as `MYPLANNER_API_TOKEN`; use `myplanner_base_url` as `MYPLANNER_BASE_URL`. For older prompts, `token: plnr_...` means the same thing as `myplanner_token: plnr_...`.
+
+Do not print, log, commit, or save the token in this repo. If your tool UI shows command previews, avoid pasting the raw token into shell commands; use a redacted secret/session environment or in-memory header where possible.
 
 ```bash
 export MYPLANNER_BASE_URL="https://myplanner.dev"
