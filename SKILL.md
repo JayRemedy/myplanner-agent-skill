@@ -25,20 +25,21 @@ The most important rule: inspect the live board structure first. MyPlanner board
 MyPlanner may give you a paste-ready use/connect prompt like:
 
 ```text
-use MyPlanner:
+load MyPlanner instructions:
 https://raw.githubusercontent.com/JayRemedy/myplanner-agent-skill/main/SKILL.md
 myplanner_token: plnr_...
 ```
 
 Fast path for pasted prompts:
 
-1. The prompt points directly at raw `SKILL.md` on purpose. Fetch/read that Markdown file directly and use it immediately. Do not clone the repo, inspect repository layout, check branches, or inspect the current workspace just to use MyPlanner.
+1. The prompt says `load MyPlanner instructions`, not `install`, on purpose. Fetch/read the raw `SKILL.md` Markdown file directly and use it immediately. Do not clone the repo, inspect repository layout, check branches, or inspect the current workspace just to use MyPlanner.
 2. Do not make persistent installation a blocking prerequisite; persistent install is optional convenience, not the task. Legacy prompts may say `use https://github.com/JayRemedy/myplanner-agent-skill` or `install https://github.com/JayRemedy/myplanner-agent-skill`; treat those as “read the raw SKILL.md and use it now” unless the user explicitly asks for a persistent install.
-3. The repo is public. Do not probe GitHub auth, do not use the pasted `myplanner_token` as `GITHUB_TOKEN`, and do not treat it as a repository access token.
-4. For Hermes, installing as a skill is fine. For Codex, Claude Code, Cursor, Windsurf, Gemini CLI, and similar agents, reading/fetching this Markdown and following it is enough to proceed. If the runtime has a fast skill/custom-instruction installer, it may use it after the immediate API verification.
-5. Do not inspect or modify the user's current project git state just to use this skill. If you need persistent installation, install outside the active project repo after immediate API verification.
-6. Treat `myplanner_token:` as the current-session MyPlanner API credential and use `https://myplanner.dev` as `MYPLANNER_BASE_URL`. For backward compatibility, old `token: plnr_...` means the same thing. If a prompt explicitly includes `myplanner_base_url:`, use that value, but MyPlanner's own Agent access prompt intentionally omits it.
-7. Verify immediately with `GET /me`; if the user asked for board access, call `GET /boards` in the same turn. Do not stop with “restart to pick up the skill” unless the runtime truly cannot use instructions it has already read.
+3. Terminology matters: reading this file means the instructions are loaded for the current session. It is not a persistent skill install and it may not show in the agent's skill/slash-command list. Do not tell the user the skill is “installed” unless you actually ran that runtime's persistent installer and verified it appears in the normal skill list. Say “loaded for this session” instead.
+4. The repo is public. Do not probe GitHub auth, do not use the pasted `myplanner_token` as `GITHUB_TOKEN`, and do not treat it as a repository access token.
+5. For Hermes, installing as a skill is fine. For Codex, Claude Code, Cursor, Windsurf, Gemini CLI, and similar agents, reading/fetching this Markdown and following it is enough to proceed. If the runtime has a fast skill/custom-instruction installer, it may use it after the immediate API verification.
+6. Do not inspect or modify the user's current project git state just to use this skill. If you need persistent installation, install outside the active project repo after immediate API verification.
+7. Treat `myplanner_token:` as the current-session MyPlanner API credential and use `https://myplanner.dev` as `MYPLANNER_BASE_URL`. For backward compatibility, old `token: plnr_...` means the same thing. If a prompt explicitly includes `myplanner_base_url:`, use that value, but MyPlanner's own Agent access prompt intentionally omits it.
+8. Verify immediately with `GET /me`; if the user asked for board access, call `GET /boards` in the same turn. Do not stop with “restart to pick up the skill” unless the runtime truly cannot use instructions it has already read.
 
 Do not commit the token, save it in this skill repo, log it, expose it in final output, or paste it into a shell command line if your tool UI shows command previews. Prefer your runtime's secret/session environment facility. If a command preview would reveal the raw token, use an API client/header facility that redacts secrets or keep the token in memory. Do not spend multiple attempts building a “private stdin” wrapper; if your tool cannot pass the token privately, make the minimal verified call, avoid echoing it in the answer, and tell the user to revoke the short-lived/exposed token afterward. If you do use stdin for the token, do not also deliver the Python/script body through stdin; use `python -c` or a temp script so stdin remains available for the token.
 
