@@ -28,14 +28,24 @@ If your agent does not support Hermes skills directly, copy `SKILL.md` into the 
 
 ## Runtime secrets
 
-Do not commit tokens. Give the agent these at runtime through environment variables or your agent platform's secret store:
+Do not commit tokens. MyPlanner may give an agent a paste-ready prompt like:
+
+```text
+instal https://github.com/JayRemedy/myplanner-agent-skill
+token:
+plnr_...
+```
+
+After installing the skill, treat the line after `token:` as the current-session API token. Use it as `MYPLANNER_API_TOKEN` and use `https://myplanner.dev` as `MYPLANNER_BASE_URL` unless a different base URL was provided.
 
 ```bash
 export MYPLANNER_BASE_URL="https://myplanner.dev"
-export MYPLANNER_API_TOKEN="your-token-here"
+export MYPLANNER_API_TOKEN="plnr_..."
 ```
 
-Tokens are created inside MyPlanner: `Integrate` > `API tokens`.
+If the agent cannot set environment variables, it should still use the pasted token directly in the Bearer authorization header for immediate API calls instead of refusing because `MYPLANNER_API_TOKEN` is not already set.
+
+Tokens are created inside MyPlanner: Settings > Agent access or `Integrate` > `API tokens`.
 
 ## REST entrypoint
 
