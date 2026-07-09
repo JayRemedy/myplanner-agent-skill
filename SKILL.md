@@ -34,7 +34,7 @@ Agenda is not a separate board. In the app UI, Agenda means the calendar/day age
 MyPlanner may give you a paste-ready connect/install prompt like:
 
 ```text
-use /MyPlanner; if unavailable, install https://github.com/JayRemedy/myplanner-agent-skill
+install https://github.com/JayRemedy/myplanner-agent-skill directly (root SKILL.md; no web search; do not echo token)
 myplanner_token: plnr_...
 ```
 
