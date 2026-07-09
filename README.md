@@ -108,6 +108,8 @@ MyPlanner boards are flexible. Before writing:
 
 Do not infer subtasks from names, indentation, or imported Monday.com shape. An item is a real subtask only if it is returned by `GET /items/{id}/subtasks` or addressed via `/subtasks/{id}`.
 
+Focus is also structural: items in the `Focus` group must have Status `Focus`. Setting Status to `Focus` moves the item into that group; changing it to another status moves it out. Creating or moving an item into `Focus` sets Status to `Focus`. Agents should read back both group and status after related writes.
+
 ## License
 
 MIT
