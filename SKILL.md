@@ -4,7 +4,7 @@ description: Use when an agent needs to read, update, sync, or automate MyPlanne
 license: MIT
 compatibility: Requires HTTPS access to myplanner.dev and either Python 3, curl, or an authenticated HTTP request tool.
 metadata:
-  version: "1.4.0"
+  version: "1.5.0"
   author: "JayRemedy"
   aliases: "myplanner, Myplanner"
   preferred_slash_command: "/MyPlanner"
@@ -28,6 +28,14 @@ The most important rule: inspect the live board structure first. MyPlanner board
 Boards are top-level MyPlanner workspaces. Board names, IDs, groups, and columns are private to each account. Always call `GET /boards` before reading or writing so the agent uses the current authorized workspace instead of embedded defaults.
 
 Agenda is not a separate board. In the app UI, Agenda means the calendar/day agenda derived from the currently opened board's Date columns. It lists items and subtasks whose date-column value matches the selected day/today, including group, date-column title when multiple Date columns exist, status, and subtask marker. To answer agenda questions through the REST API: fetch/verify the target board, identify `date` columns, fetch items and subtasks as needed, parse date values, then filter by the requested date. If the user just says “agenda” without a board, ask which board or use the currently implied board from context; do not invent a global `/agenda` endpoint.
+
+Focus is a server-enforced status/group invariant, not merely a visual group name:
+
+- An item in the `Focus` group must have Status `Focus`.
+- Setting an item's Status to `Focus` moves it into the `Focus` group.
+- Changing an item in the `Focus` group to any other status, including `Working on it`, moves it to the board's first non-Focus group.
+- Creating or moving an item into the `Focus` group sets its Status to `Focus`.
+- After any Focus/status write, read the item back and verify both `group_id`/group name and Status. Never report a status-only change as complete while the item remains incorrectly grouped.
 
 ## Setup
 
