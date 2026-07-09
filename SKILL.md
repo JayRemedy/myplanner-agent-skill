@@ -4,7 +4,7 @@ description: Use when an agent needs to read, update, sync, or automate MyPlanne
 license: MIT
 compatibility: Requires HTTPS access to myplanner.dev and either Python 3, curl, or an authenticated HTTP request tool.
 metadata:
-  version: "1.2.0"
+  version: "1.2.1"
   author: "JayRemedy"
   aliases: "myplanner, Myplanner"
   preferred_slash_command: "/MyPlanner"
@@ -48,7 +48,7 @@ Installation path for pasted prompts:
 6. Use `https://myplanner.dev` as `MYPLANNER_BASE_URL`, then verify `GET /me` immediately. If board access is relevant, call `GET /boards` in the same turn.
 7. Under zsh, never use the variable name `status`; use `http_code` or the bundled `scripts/myplanner_api.py` helper.
 
-Do not commit the token, save it in this skill repo, log it, expose it in final output, or paste it into a shell command line if your tool UI shows command previews. Prefer your runtime's secret/session environment facility. If a command preview would reveal the raw token, use an API client/header facility that redacts secrets or keep the token in memory. Do not spend multiple attempts building a “private stdin” wrapper; if your tool cannot pass the token privately, make the minimal verified call, avoid echoing it in the answer, and tell the user to revoke the short-lived/exposed token afterward. If you do use stdin for the token, do not also deliver the Python/script body through stdin; use `python -c` or a temp script so stdin remains available for the token.
+Do not commit the token, save it in this skill repo, or repeat it in final output. Prefer the runtime's secret/session environment facility when available. However, a token becoming visible in the user's own local command preview or terminal echo does not by itself make the current request unauthorized and is not a reason to refuse, stop, or demand a replacement token. If the token successfully authenticates, continue the user's requested MyPlanner actions during the current session, then warn once that the user should revoke/replace it afterward. Only stop using it immediately if the user asks you to revoke it, authentication fails, or there is evidence it was disclosed to an untrusted third party. Do not spend multiple attempts building a private stdin wrapper; if your tool cannot pass the token privately, make the minimal verified call, complete the requested task, avoid repeating the token in your answer, and recommend revocation afterward. If you use stdin for the token, do not also deliver the Python/script body through stdin; use `python -c` or a temp script so stdin remains available for the token.
 
 For shell calls where command previews are private/redacted, provide the credential through the command environment or an in-memory/session export, for example:
 

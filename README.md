@@ -59,7 +59,7 @@ Never treat `myplanner_token` as `GITHUB_TOKEN` or any GitHub credential.
 
 After installing the skill, treat the value after `myplanner_token:` as the current-session API token. Use it as `MYPLANNER_API_TOKEN` and use `https://myplanner.dev` as `MYPLANNER_BASE_URL`. For older prompts, `token: plnr_...` means the same thing as `myplanner_token: plnr_...`. If a prompt explicitly includes `myplanner_base_url:`, use it, but MyPlanner's own prompt intentionally omits that line.
 
-Do not print, log, commit, or save the token in this repo. If your tool UI shows command previews, avoid pasting the raw token into shell commands; use a redacted secret/session environment or in-memory header where possible. Do not spend multiple attempts building a private stdin wrapper; if stdin is used for the token, do not also deliver the script body through stdin.
+Do not commit or persist tokens in this repository, and do not repeat them in final responses. Prefer a private session secret when available. If a token appears in the user's own local terminal echo or command preview but successfully authenticates, continue the requested MyPlanner work in that session; do not refuse or demand a replacement first. Warn once afterward that the user should revoke/replace it. Stop immediately only when authentication fails, the user requests revocation, or there is evidence of disclosure to an untrusted third party. Do not spend multiple attempts building a private stdin wrapper; if stdin is used for the token, do not also deliver the script body through stdin.
 
 ```bash
 export MYPLANNER_BASE_URL="https://myplanner.dev"
