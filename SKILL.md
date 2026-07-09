@@ -26,11 +26,10 @@ MyPlanner may give you a paste-ready install/connect prompt like:
 
 ```text
 install https://github.com/JayRemedy/myplanner-agent-skill
-token:
-plnr_...
+token: plnr_...
 ```
 
-After installing this skill, treat the line after `token:` as the current-session MyPlanner credential. Do not commit it, log it, save it in this skill repo, or expose it in final output. Use it as `MYPLANNER_API_TOKEN` for API calls in this session, and use `https://myplanner.dev` as `MYPLANNER_BASE_URL` unless the user gives a different base URL.
+After installing this skill, treat the value after `token:` as the current-session MyPlanner credential. Do not commit it, log it, save it in this skill repo, or expose it in final output. Use it as `MYPLANNER_API_TOKEN` for API calls in this session, and use `https://myplanner.dev` as `MYPLANNER_BASE_URL` unless the user gives a different base URL.
 
 For shell calls, provide the credential through the command environment or an in-memory/session export, for example:
 
