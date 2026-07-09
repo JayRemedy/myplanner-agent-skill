@@ -26,12 +26,17 @@ MyPlanner may give you a paste-ready install/connect prompt like:
 
 ```text
 install https://github.com/JayRemedy/myplanner-agent-skill
-token: plnr_...
+myplanner_base_url: https://myplanner.dev
+myplanner_token: plnr_...
 ```
 
-After installing this skill, treat the value after `token:` as the current-session MyPlanner credential. Do not commit it, log it, save it in this skill repo, or expose it in final output. Use it as `MYPLANNER_API_TOKEN` for API calls in this session, and use `https://myplanner.dev` as `MYPLANNER_BASE_URL` unless the user gives a different base URL.
+Install the public GitHub repo as a skill/instruction source. The repo is public: do not use the pasted `myplanner_token` as `GITHUB_TOKEN`, GitHub auth, or a repository access token.
 
-For shell calls, provide the credential through the command environment or an in-memory/session export, for example:
+After installing this skill, treat the value after `myplanner_token:` as the current-session MyPlanner API credential. Treat `myplanner_base_url:` as `MYPLANNER_BASE_URL` when present; otherwise default to `https://myplanner.dev`. For backward compatibility, if the pasted prompt uses old `token: plnr_...` format, interpret that value exactly the same as `myplanner_token:`.
+
+Do not commit the token, save it in this skill repo, log it, expose it in final output, or paste it into a shell command line if your tool UI shows command previews. Prefer your runtime's secret/session environment facility. If a command preview would reveal the raw token, use an API client/header facility that redacts secrets or keep the token in memory. If unavoidable, warn the user that the token may be exposed and should be revoked afterward.
+
+For shell calls where command previews are private/redacted, provide the credential through the command environment or an in-memory/session export, for example:
 
 ```bash
 export MYPLANNER_BASE_URL="https://myplanner.dev"
