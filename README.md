@@ -9,19 +9,20 @@ This repository is intentionally small and secret-free. It gives AI agents a sta
 MyPlanner may give an agent a paste-ready prompt:
 
 ```text
-use https://github.com/JayRemedy/myplanner-agent-skill
+use MyPlanner:
+https://raw.githubusercontent.com/JayRemedy/myplanner-agent-skill/main/SKILL.md
 myplanner_token: plnr_...
 ```
 
 Fastest acceptable behavior:
 
-1. The prompt says `use`, not `install`, on purpose. Read the public repo's root `SKILL.md` or this README.
+1. The prompt points directly at raw `SKILL.md` on purpose. Fetch/read that Markdown file directly; do not clone the repo, inspect repository layout, check branches, or inspect the current workspace just to use MyPlanner.
 2. Treat `myplanner_token:` as the current-session MyPlanner API token, not as a GitHub token.
 3. Use `https://myplanner.dev` as the default MyPlanner base URL.
 4. Immediately verify with `GET /me`.
 5. If the user asked for boards, call `GET /boards` in the same turn.
 
-Do not make persistent skill installation a blocking prerequisite. Persistent install is optional convenience, not the task. If the agent can read these instructions now, it should use them now and continue the requested MyPlanner work. Do not stop at “restart” unless the runtime truly cannot use instructions it has already read. Legacy prompts may say `install https://github.com/JayRemedy/myplanner-agent-skill`; treat that as `use` unless the user explicitly asks for a persistent install.
+Do not make persistent skill installation a blocking prerequisite. Persistent install is optional convenience, not the task. If the agent can read these instructions now, it should use them now and continue the requested MyPlanner work. Do not stop at “restart” unless the runtime truly cannot use instructions it has already read. Legacy prompts may say `use https://github.com/JayRemedy/myplanner-agent-skill` or `install https://github.com/JayRemedy/myplanner-agent-skill`; treat those as “read the raw SKILL.md and use it now” unless the user explicitly asks for a persistent install.
 
 Examples by runtime:
 
@@ -31,7 +32,7 @@ Examples by runtime:
   hermes -s myplanner
   ```
   Or in an active Hermes session: `/skill myplanner`
-- Codex, Claude Code, Cursor, Windsurf, Gemini CLI, and similar agents: read/fetch this public repo and use `SKILL.md` as custom instructions, project rules, memory, or a runtime-specific skill. If the user included `myplanner_token:`, do the immediate `/me` verification before spending time on persistent installation.
+- Codex, Claude Code, Cursor, Windsurf, Gemini CLI, and similar agents: fetch the raw `SKILL.md` URL from the prompt and use it as custom instructions, project rules, memory, or runtime instructions. If the user included `myplanner_token:`, do the immediate `/me` verification before spending time on persistent installation or cloning.
 - If an agent has no skill system: read `SKILL.md`, follow the Setup and Discovery Workflow sections, then call the MyPlanner REST API directly.
 
 ## Runtime secrets
@@ -39,17 +40,17 @@ Examples by runtime:
 Do not commit tokens. MyPlanner may give an agent a paste-ready prompt like:
 
 ```text
-use https://github.com/JayRemedy/myplanner-agent-skill
+use MyPlanner:
+https://raw.githubusercontent.com/JayRemedy/myplanner-agent-skill/main/SKILL.md
 myplanner_token: plnr_...
 ```
 
-Install fast:
+Use fast:
 
 - This repo is public; no GitHub token is needed.
-- The skill file is at repository root: `SKILL.md`.
-- Install into the agent/skills directory, not into the user's current project repo.
-- Do not inspect or modify the current project git state just to install this skill.
-- After install, continue the requested MyPlanner task immediately if the runtime can use the skill; do not stop at “restart” unless that is truly required.
+- The prompt points directly at raw `SKILL.md`; fetch/read that file without cloning if possible.
+- Do not inspect or modify the current project git state just to use this skill.
+- Continue the requested MyPlanner task immediately if the runtime can use the instructions; do not stop at “restart” unless that is truly required.
 
 Never treat `myplanner_token` as `GITHUB_TOKEN` or any GitHub credential.
 
