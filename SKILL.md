@@ -4,7 +4,7 @@ description: Use when an agent needs to read, update, sync, or automate MyPlanne
 license: MIT
 compatibility: Requires HTTPS access to myplanner.dev and either Python 3, curl, or an authenticated HTTP request tool.
 metadata:
-  version: "1.2.1"
+  version: "1.3.0"
   author: "JayRemedy"
   aliases: "myplanner, Myplanner"
   preferred_slash_command: "/MyPlanner"
@@ -45,7 +45,7 @@ Installation path for pasted prompts:
 3. The repository is public. Do not use the pasted `myplanner_token` as `GITHUB_TOKEN`; it is only a MyPlanner API credential.
 4. The standards-compliant skill identifier and directory are lowercase `myplanner`. `agents/openai.yaml` supplies the user-facing display name `MyPlanner`.
 5. Verify list visibility before saying the persistent install succeeded. If the runtime cannot install persistently, read the canonical `SKILL.md` and say “loaded for this session,” not “installed.”
-6. Use `https://myplanner.dev` as `MYPLANNER_BASE_URL`, then verify `GET /me` immediately. If board access is relevant, call `GET /boards` in the same turn.
+6. Use `https://myplanner.dev` as `MYPLANNER_BASE_URL`. Installation success is verified by the skill appearing in the runtime's skill list. Do not call `GET /me` merely to verify installation. Keep the token in current-session context and verify it through the first useful API request the user asks for, such as `GET /boards`. Call `GET /me` only when identity, token label, or account confirmation is specifically useful.
 7. Under zsh, never use the variable name `status`; use `http_code` or the bundled `scripts/myplanner_api.py` helper.
 
 Do not commit the token, save it in this skill repo, or repeat it in final output. Prefer the runtime's secret/session environment facility when available. However, a token becoming visible in the user's own local command preview or terminal echo does not by itself make the current request unauthorized and is not a reason to refuse, stop, or demand a replacement token. If the token successfully authenticates, continue the user's requested MyPlanner actions during the current session, then warn once that the user should revoke/replace it afterward. Only stop using it immediately if the user asks you to revoke it, authentication fails, or there is evidence it was disclosed to an untrusted third party. Do not spend multiple attempts building a private stdin wrapper; if your tool cannot pass the token privately, make the minimal verified call, complete the requested task, avoid repeating the token in your answer, and recommend revocation afterward. If you use stdin for the token, do not also deliver the Python/script body through stdin; use `python -c` or a temp script so stdin remains available for the token.
@@ -140,13 +140,13 @@ mp_api() {
 
 Before making changes:
 
-1. Verify token and identity:
-   ```bash
-   mp_api GET /me
-   ```
-2. List boards:
+1. Start with the first useful read for the task. For board work, list boards; this also verifies the token:
    ```bash
    mp_api GET /boards
+   ```
+2. Use `GET /me` only when you need to confirm the account identity or token label:
+   ```bash
+   mp_api GET /me
    ```
 3. Fetch the target board shape:
    ```bash

@@ -20,7 +20,7 @@ Expected installation behavior:
 3. The standards identifier/directory is `myplanner`; `agents/openai.yaml` provides the display name `MyPlanner`.
 4. Verify the fresh install is visible before saying it is installed.
 5. Treat `myplanner_token:` as a current-session MyPlanner API token, not GitHub auth.
-6. Immediately verify `GET /me`, then call `GET /boards` when boards are relevant.
+6. Verify installation through skill-list visibility. Do not call `GET /me` merely for installation; use the first useful API request, such as `GET /boards`, to verify the token.
 7. Under zsh, do not use `status` as a variable; use `http_code` or `scripts/myplanner_api.py`.
 
 If the runtime cannot persistently install the skill, fetch/read `SKILL.md` and continue anyway, but be precise: say “loaded for this session,” not “installed.” Session-loaded instructions may not appear in the skill/slash-command list. Do not stop at “restart” unless the runtime truly cannot use instructions it has already read.
@@ -36,7 +36,7 @@ Examples by runtime:
   ```
   Or in an active Hermes session: `/skill myplanner`
 - Codex: invoke `$skill-installer` with the exact GitHub directory URL `https://github.com/JayRemedy/myplanner-agent-skill/tree/main/skills/myplanner`.
-- Other agents: use the runtime's normal installer for the canonical `skills/myplanner` directory. After install, verify list visibility and `GET /me`.
+- Other agents: use the runtime's normal installer for the canonical `skills/myplanner` directory. After install, verify list visibility. Verify the token through the first useful API request.
 - If an agent has no skill system: read `skills/myplanner/SKILL.md`, follow Setup and Discovery Workflow, then call the REST API directly.
 
 ## Runtime secrets
@@ -53,7 +53,7 @@ Install directly:
 - Invoke `$skill-installer` without checking for an existing skill first.
 - Install the exact `skills/myplanner` directory; do not search the web or inspect branches.
 - Do not treat `myplanner_token` as GitHub auth.
-- Verify installation, then continue immediately with `GET /me` and the requested MyPlanner task.
+- Verify installation, then wait for or continue with the requested MyPlanner task. Use its first useful API call to verify the token; do not add a standalone `/me` call unless identity information is needed.
 
 Never treat `myplanner_token` as `GITHUB_TOKEN` or any GitHub credential.
 
@@ -95,12 +95,12 @@ curl -sS \
 
 ## Important agent rule
 
-MyPlanner boards are flexible. An agent must inspect the live board before writing:
+MyPlanner boards are flexible. Before writing:
 
-1. `GET /me`
-2. `GET /boards`
-3. `GET /boards/{id}`
-4. Use numeric `board_id`, `group_id`, `column_id`, `item_id`, and `subtask_id` from API responses.
+1. `GET /boards` (also verifies the token)
+2. `GET /boards/{id}`
+3. Use numeric `board_id`, `group_id`, `column_id`, `item_id`, and `subtask_id` from API responses.
+4. Call `GET /me` only when account identity or token-label information is needed.
 
 Do not infer subtasks from names, indentation, or imported Monday.com shape. An item is a real subtask only if it is returned by `GET /items/{id}/subtasks` or addressed via `/subtasks/{id}`.
 
