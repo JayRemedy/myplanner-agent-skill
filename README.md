@@ -13,12 +13,15 @@ install https://github.com/JayRemedy/myplanner-agent-skill
 myplanner_token: plnr_...
 ```
 
-Agent-agnostic behavior:
+Fastest acceptable behavior:
 
-1. Fetch this public repo or its root `SKILL.md`.
-2. Load/copy `SKILL.md` as the agent's operating instructions for MyPlanner.
-3. Treat `myplanner_token:` as the current-session MyPlanner API token, not as a GitHub token.
-4. Continue the requested MyPlanner task immediately if the runtime can use the loaded instructions.
+1. Read the public repo's root `SKILL.md` or this README.
+2. Treat `myplanner_token:` as the current-session MyPlanner API token, not as a GitHub token.
+3. Use `https://myplanner.dev` as the default MyPlanner base URL.
+4. Immediately verify with `GET /me`.
+5. If the user asked for boards, call `GET /boards` in the same turn.
+
+Do not make persistent skill installation a blocking prerequisite. Persistent install is optional convenience, not the task. If the agent can read these instructions now, it should use them now and continue the requested MyPlanner work. Do not stop at “restart” unless the runtime truly cannot use instructions it has already read.
 
 Examples by runtime:
 
@@ -28,7 +31,7 @@ Examples by runtime:
   hermes -s myplanner
   ```
   Or in an active Hermes session: `/skill myplanner`
-- Codex, Claude Code, Cursor, Windsurf, Gemini CLI, and similar agents: clone/fetch this public repo and add `SKILL.md` to the agent's custom instructions, project rules, memory, or skill system. The file is intentionally plain Markdown so non-Hermes agents can use it directly.
+- Codex, Claude Code, Cursor, Windsurf, Gemini CLI, and similar agents: read/fetch this public repo and use `SKILL.md` as custom instructions, project rules, memory, or a runtime-specific skill. If the user included `myplanner_token:`, do the immediate `/me` verification before spending time on persistent installation.
 - If an agent has no skill system: read `SKILL.md`, follow the Setup and Discovery Workflow sections, then call the MyPlanner REST API directly.
 
 ## Runtime secrets
