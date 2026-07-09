@@ -9,19 +9,19 @@ This repository is intentionally small and secret-free. It gives AI agents a sta
 MyPlanner may give an agent a paste-ready prompt:
 
 ```text
-install https://github.com/JayRemedy/myplanner-agent-skill directly (root SKILL.md; no web search; do not echo token)
+$skill-installer install https://github.com/JayRemedy/myplanner-agent-skill/tree/main/skills/myplanner
 myplanner_token: plnr_...
 ```
 
-Expected fast behavior:
+Expected installation behavior:
 
-1. Check whether `/MyPlanner` is already installed. If yes, skip the installer, GitHub inspection, web search, and local file rewrites; immediately verify `GET /me`.
-2. Only if unavailable, install/register this public repo using the runtime's normal installer. The skill is the root `SKILL.md`; no GitHub auth, branch inspection, or subdirectory discovery is needed.
-3. Use `MyPlanner` as the display/name so the preferred command is `/MyPlanner`; keep lowercase `myplanner` as an alias when supported.
-4. Verify a fresh install is visible in the normal skill/slash-command list before saying it is installed.
-5. Treat `myplanner_token:` as the current-session MyPlanner API token, not as a GitHub token.
-6. Use `https://myplanner.dev` as the default base URL and immediately verify `GET /me`; call `GET /boards` in the same turn when boards are relevant.
-7. Under zsh, do not use `status` as a variable name. Use `http_code` or the bundled `scripts/myplanner_api.py` helper.
+1. Invoke `$skill-installer` directly. This is an installation prompt, so do not first check for an existing MyPlanner skill.
+2. Install the exact `skills/myplanner` directory from the public repository; do not search the web, inspect branches, or discover another path.
+3. The standards identifier/directory is `myplanner`; `agents/openai.yaml` provides the display name `MyPlanner`.
+4. Verify the fresh install is visible before saying it is installed.
+5. Treat `myplanner_token:` as a current-session MyPlanner API token, not GitHub auth.
+6. Immediately verify `GET /me`, then call `GET /boards` when boards are relevant.
+7. Under zsh, do not use `status` as a variable; use `http_code` or `scripts/myplanner_api.py`.
 
 If the runtime cannot persistently install the skill, fetch/read `SKILL.md` and continue anyway, but be precise: say “loaded for this session,” not “installed.” Session-loaded instructions may not appear in the skill/slash-command list. Do not stop at “restart” unless the runtime truly cannot use instructions it has already read.
 
@@ -31,29 +31,29 @@ Examples by runtime:
 
 - Hermes Agent:
   ```bash
-  hermes skills install https://raw.githubusercontent.com/JayRemedy/myplanner-agent-skill/main/SKILL.md --name myplanner
+  hermes skills install https://raw.githubusercontent.com/JayRemedy/myplanner-agent-skill/main/skills/myplanner/SKILL.md --name myplanner
   hermes -s myplanner
   ```
   Or in an active Hermes session: `/skill myplanner`
-- Codex, Claude Code, Cursor, Windsurf, Gemini CLI, and similar agents: use the runtime's normal installer/custom-instruction flow for this GitHub repo if available. After install, verify the skill appears in the normal skill/slash-command list before claiming it is installed. Then do the immediate `/me` verification before stopping.
-- If an agent has no skill system: read `SKILL.md`, follow the Setup and Discovery Workflow sections, then call the MyPlanner REST API directly.
+- Codex: invoke `$skill-installer` with the exact GitHub directory URL `https://github.com/JayRemedy/myplanner-agent-skill/tree/main/skills/myplanner`.
+- Other agents: use the runtime's normal installer for the canonical `skills/myplanner` directory. After install, verify list visibility and `GET /me`.
+- If an agent has no skill system: read `skills/myplanner/SKILL.md`, follow Setup and Discovery Workflow, then call the REST API directly.
 
 ## Runtime secrets
 
 Do not commit tokens. MyPlanner may give an agent a paste-ready prompt like:
 
 ```text
-install https://github.com/JayRemedy/myplanner-agent-skill directly (root SKILL.md; no web search; do not echo token)
+$skill-installer install https://github.com/JayRemedy/myplanner-agent-skill/tree/main/skills/myplanner
 myplanner_token: plnr_...
 ```
 
-Connect quickly:
+Install directly:
 
-- If `/MyPlanner` is already installed, do not reinstall or inspect GitHub; use it immediately.
-- Otherwise install/register this public repo with the runtime's normal skill installer. The skill is the root `SKILL.md`.
+- Invoke `$skill-installer` without checking for an existing skill first.
+- Install the exact `skills/myplanner` directory; do not search the web or inspect branches.
 - Do not treat `myplanner_token` as GitHub auth.
-- Verify a fresh install is visible before claiming it is installed.
-- Continue immediately with `GET /me`, then the requested MyPlanner task.
+- Verify installation, then continue immediately with `GET /me` and the requested MyPlanner task.
 
 Never treat `myplanner_token` as `GITHUB_TOKEN` or any GitHub credential.
 
