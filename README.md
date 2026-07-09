@@ -9,20 +9,22 @@ This repository is intentionally small and secret-free. It gives AI agents a sta
 MyPlanner may give an agent a paste-ready prompt:
 
 ```text
-use MyPlanner:
+load MyPlanner instructions:
 https://raw.githubusercontent.com/JayRemedy/myplanner-agent-skill/main/SKILL.md
 myplanner_token: plnr_...
 ```
 
 Fastest acceptable behavior:
 
-1. The prompt points directly at raw `SKILL.md` on purpose. Fetch/read that Markdown file directly; do not clone the repo, inspect repository layout, check branches, or inspect the current workspace just to use MyPlanner.
+1. The prompt says `load MyPlanner instructions`, not `install`, on purpose. Fetch/read that Markdown file directly; do not clone the repo, inspect repository layout, check branches, or inspect the current workspace just to use MyPlanner.
 2. Treat `myplanner_token:` as the current-session MyPlanner API token, not as a GitHub token.
 3. Use `https://myplanner.dev` as the default MyPlanner base URL.
 4. Immediately verify with `GET /me`.
 5. If the user asked for boards, call `GET /boards` in the same turn.
 
 Do not make persistent skill installation a blocking prerequisite. Persistent install is optional convenience, not the task. If the agent can read these instructions now, it should use them now and continue the requested MyPlanner work. Do not stop at “restart” unless the runtime truly cannot use instructions it has already read. Legacy prompts may say `use https://github.com/JayRemedy/myplanner-agent-skill` or `install https://github.com/JayRemedy/myplanner-agent-skill`; treat those as “read the raw SKILL.md and use it now” unless the user explicitly asks for a persistent install.
+
+Terminology matters: reading this file means the instructions are loaded for the current session. It is not a persistent skill install and it may not show in the agent's skill/slash-command list. Do not tell the user the skill is “installed” unless you actually ran that runtime's persistent installer and verified it appears in the normal skill list. Say “loaded for this session” instead.
 
 Examples by runtime:
 
@@ -40,7 +42,7 @@ Examples by runtime:
 Do not commit tokens. MyPlanner may give an agent a paste-ready prompt like:
 
 ```text
-use MyPlanner:
+load MyPlanner instructions:
 https://raw.githubusercontent.com/JayRemedy/myplanner-agent-skill/main/SKILL.md
 myplanner_token: plnr_...
 ```
