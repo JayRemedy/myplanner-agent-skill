@@ -1,0 +1,7 @@
+interface:
+  display_name: "MyPlanner"
+  short_description: "Operate MyPlanner boards, agenda, items, and subtasks"
+  default_prompt: "Use MyPlanner for this task. If it is already installed, do not reinstall it; verify the supplied token with GET /me and continue."
+
+policy:
+  allow_implicit_invocation: true
