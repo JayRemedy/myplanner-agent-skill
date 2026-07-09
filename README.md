@@ -1,8 +1,8 @@
 # MyPlanner Agent Skill
 
-A public, copyable agent skill for operating MyPlanner through its REST API and webhooks.
+A public, copyable agent skill for operating MyPlanner through its REST API and webhooks. Preferred display/command name: `MyPlanner` (`/MyPlanner`), with lowercase `myplanner` as an alias when runtimes support aliases.
 
-This repository is intentionally small and secret-free. It gives AI agents a stable procedure for discovering board structure, using numeric IDs safely, creating/updating items, handling real subtasks, and registering HMAC-signed webhooks.
+This repository is intentionally small and secret-free. It gives AI agents a stable procedure for discovering board structure, using numeric IDs safely, creating/updating items, handling real subtasks, understanding Agenda as date-column-driven board agenda, and registering HMAC-signed webhooks.
 
 ## Install/use with any agent
 
@@ -16,14 +16,16 @@ myplanner_token: plnr_...
 Expected behavior:
 
 1. The prompt uses `install <github repo>` because that is the common convention for a persistent agent skill install.
-2. Install/register the skill using the current runtime's normal skill/custom-instruction installer when available.
-3. Verify the skill is visible in the normal skill/slash-command list before saying it is “installed.”
+2. Install/register the skill using the current runtime's normal skill/custom-instruction installer when available. Use `MyPlanner` as the display/name so the preferred command is `/MyPlanner`; keep lowercase `myplanner` as an alias when supported.
+3. Verify the skill is visible in the normal skill/slash-command list before saying it is “installed.” If the runtime lowercases skill names, report the actual command it created.
 4. Treat `myplanner_token:` as the current-session MyPlanner API token, not as a GitHub token.
 5. Use `https://myplanner.dev` as the default MyPlanner base URL.
 6. Immediately verify with `GET /me`.
 7. If the user asked for boards, call `GET /boards` in the same turn.
 
 If the runtime cannot persistently install the skill, fetch/read `SKILL.md` and continue anyway, but be precise: say “loaded for this session,” not “installed.” Session-loaded instructions may not appear in the skill/slash-command list. Do not stop at “restart” unless the runtime truly cannot use instructions it has already read.
+
+Board names and IDs are never included in this public skill. Agents must call `GET /boards` with the authorized account token before selecting a board. Agenda means the day/calendar agenda generated from a board's Date columns; it is not a separate board or global `/agenda` endpoint.
 
 Examples by runtime:
 
