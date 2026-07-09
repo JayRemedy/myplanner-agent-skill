@@ -9,22 +9,21 @@ This repository is intentionally small and secret-free. It gives AI agents a sta
 MyPlanner may give an agent a paste-ready prompt:
 
 ```text
-load MyPlanner instructions:
-https://raw.githubusercontent.com/JayRemedy/myplanner-agent-skill/main/SKILL.md
+install https://github.com/JayRemedy/myplanner-agent-skill
 myplanner_token: plnr_...
 ```
 
-Fastest acceptable behavior:
+Expected behavior:
 
-1. The prompt says `load MyPlanner instructions`, not `install`, on purpose. Fetch/read that Markdown file directly; do not clone the repo, inspect repository layout, check branches, or inspect the current workspace just to use MyPlanner.
-2. Treat `myplanner_token:` as the current-session MyPlanner API token, not as a GitHub token.
-3. Use `https://myplanner.dev` as the default MyPlanner base URL.
-4. Immediately verify with `GET /me`.
-5. If the user asked for boards, call `GET /boards` in the same turn.
+1. The prompt uses `install <github repo>` because that is the common convention for a persistent agent skill install.
+2. Install/register the skill using the current runtime's normal skill/custom-instruction installer when available.
+3. Verify the skill is visible in the normal skill/slash-command list before saying it is “installed.”
+4. Treat `myplanner_token:` as the current-session MyPlanner API token, not as a GitHub token.
+5. Use `https://myplanner.dev` as the default MyPlanner base URL.
+6. Immediately verify with `GET /me`.
+7. If the user asked for boards, call `GET /boards` in the same turn.
 
-Do not make persistent skill installation a blocking prerequisite. Persistent install is optional convenience, not the task. If the agent can read these instructions now, it should use them now and continue the requested MyPlanner work. Do not stop at “restart” unless the runtime truly cannot use instructions it has already read. Legacy prompts may say `use https://github.com/JayRemedy/myplanner-agent-skill` or `install https://github.com/JayRemedy/myplanner-agent-skill`; treat those as “read the raw SKILL.md and use it now” unless the user explicitly asks for a persistent install.
-
-Terminology matters: reading this file means the instructions are loaded for the current session. It is not a persistent skill install and it may not show in the agent's skill/slash-command list. Do not tell the user the skill is “installed” unless you actually ran that runtime's persistent installer and verified it appears in the normal skill list. Say “loaded for this session” instead.
+If the runtime cannot persistently install the skill, fetch/read `SKILL.md` and continue anyway, but be precise: say “loaded for this session,” not “installed.” Session-loaded instructions may not appear in the skill/slash-command list. Do not stop at “restart” unless the runtime truly cannot use instructions it has already read.
 
 Examples by runtime:
 
@@ -34,7 +33,7 @@ Examples by runtime:
   hermes -s myplanner
   ```
   Or in an active Hermes session: `/skill myplanner`
-- Codex, Claude Code, Cursor, Windsurf, Gemini CLI, and similar agents: fetch the raw `SKILL.md` URL from the prompt and use it as custom instructions, project rules, memory, or runtime instructions. If the user included `myplanner_token:`, do the immediate `/me` verification before spending time on persistent installation or cloning.
+- Codex, Claude Code, Cursor, Windsurf, Gemini CLI, and similar agents: use the runtime's normal installer/custom-instruction flow for this GitHub repo if available. After install, verify the skill appears in the normal skill/slash-command list before claiming it is installed. Then do the immediate `/me` verification before stopping.
 - If an agent has no skill system: read `SKILL.md`, follow the Setup and Discovery Workflow sections, then call the MyPlanner REST API directly.
 
 ## Runtime secrets
@@ -42,16 +41,17 @@ Examples by runtime:
 Do not commit tokens. MyPlanner may give an agent a paste-ready prompt like:
 
 ```text
-load MyPlanner instructions:
-https://raw.githubusercontent.com/JayRemedy/myplanner-agent-skill/main/SKILL.md
+install https://github.com/JayRemedy/myplanner-agent-skill
 myplanner_token: plnr_...
 ```
 
-Use fast:
+Install properly:
 
 - This repo is public; no GitHub token is needed.
-- The prompt points directly at raw `SKILL.md`; fetch/read that file without cloning if possible.
-- Do not inspect or modify the current project git state just to use this skill.
+- Install/register the GitHub repo using the runtime's normal skill/custom-instruction installer.
+- Do not treat `myplanner_token` as GitHub auth.
+- Verify list/slash-command visibility before claiming the skill is installed.
+- If persistent install is unavailable, read `SKILL.md` and continue, but call it loaded for this session.
 - Continue the requested MyPlanner task immediately if the runtime can use the instructions; do not stop at “restart” unless that is truly required.
 
 Never treat `myplanner_token` as `GITHUB_TOKEN` or any GitHub credential.
