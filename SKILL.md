@@ -25,7 +25,7 @@ The most important rule: inspect the live board structure first. MyPlanner board
 
 ## Workspace discovery
 
-Boards are top-level MyPlanner workspaces. Board names, IDs, groups, and columns are private to each account. Always call `GET /boards` before reading or writing so the agent uses the current authorized workspace instead of embedded defaults.
+Boards are top-level MyPlanner workspaces. Never include board names, IDs, groups, or columns in this public skill. Always call `GET /boards` before reading or writing so the agent uses the current authorized workspace instead of embedded defaults.
 
 Agenda is not a separate board. In the app UI, Agenda means the calendar/day agenda derived from the currently opened board's Date columns. It lists items and subtasks whose date-column value matches the selected day/today, including group, date-column title when multiple Date columns exist, status, and subtask marker. To answer agenda questions through the REST API: fetch/verify the target board, identify `date` columns, fetch items and subtasks as needed, parse date values, then filter by the requested date. If the user just says “agenda” without a board, ask which board or use the currently implied board from context; do not invent a global `/agenda` endpoint.
 
