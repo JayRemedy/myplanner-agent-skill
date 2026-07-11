@@ -1,6 +1,6 @@
 # MyPlanner Agent Skill
 
-A public, copyable agent skill for operating MyPlanner through its REST API and webhooks. The standards-compliant skill identifier is lowercase `myplanner`; `agents/openai.yaml` supplies the user-facing display name `MyPlanner`.
+A public, copyable agent skill for operating [MyPlanner](https://myplanner.dev) through its REST API and webhooks. The standards-compliant skill identifier is lowercase `myplanner`; `agents/openai.yaml` supplies the user-facing display name `MyPlanner`.
 
 This repository is intentionally small and secret-free. It gives AI agents a stable procedure for discovering board structure, using numeric IDs safely, creating/updating items, handling real subtasks, understanding Agenda as date-column-driven board agenda, and registering HMAC-signed webhooks.
 
